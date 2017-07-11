@@ -2,20 +2,26 @@ package main
 
 import (
 	"fmt"
-	"github.com/philbrookes/map-generator/pkg/Factory"
-	"github.com/philbrookes/map-generator/pkg/Generics"
-	"github.com/pkg/errors"
 	"io"
 	"os"
 	"strconv"
+
+	"github.com/philbrookes/map-generator/pkg/factory"
+	"github.com/philbrookes/map-generator/pkg/generics"
+	"github.com/pkg/errors"
 )
 
 func main() {
 	mapType := "flat"
-	generatorFactory := Factory.Generator(mapType)
-	positionFactory := Factory.Position(mapType)
-	tileFactory := Factory.Tile(mapType)
-	mapFactory := Factory.Map(mapType)
+	generatorFactory := factory.Generator(mapType)
+	positionFactory := factory.Position(mapType)
+	tileFactory := factory.Tile(mapType)
+	mapFactory := factory.Map(mapType)
+
+	if len(os.Args) < 2 {
+		fmt.Fprintf(os.Stderr, "You must supply an x and y co-ordinate: ./generator <x> <y>\n")
+		return
+	}
 
 	midX, err := strconv.Atoi(os.Args[1])
 	if err != nil {
@@ -30,8 +36,8 @@ func main() {
 	viewport := 25
 	mapsize := buffer + viewport
 
-	topLeft := positionFactory(Generics.Coordinate(midX-(mapsize)), Generics.Coordinate(midY-(mapsize)), 0)
-	bottomRight := positionFactory(Generics.Coordinate(midX+(mapsize)), Generics.Coordinate(midY+(mapsize)), 0)
+	topLeft := positionFactory(generics.Coordinate(midX-(mapsize)), generics.Coordinate(midY-(mapsize)), 0)
+	bottomRight := positionFactory(generics.Coordinate(midX+(mapsize)), generics.Coordinate(midY+(mapsize)), 0)
 
 	generator := generatorFactory(topLeft, bottomRight, positionFactory, tileFactory, mapFactory)
 
@@ -47,11 +53,11 @@ func main() {
 
 }
 
-func printMap(genMap Generics.Map, buffer int, w io.Writer) error {
-	bufferCoord := Generics.Coordinate(buffer)
-	for x:=genMap.TopLeft().X()+bufferCoord;x<=genMap.BottomRight().X()-bufferCoord;x++{
-		for y:=genMap.TopLeft().Y()+bufferCoord;y<=genMap.BottomRight().Y()-bufferCoord;y++{
-			pos := Factory.Position(genMap.Structure())(x, y, 0)
+func printMap(genMap generics.Map, buffer int, w io.Writer) error {
+	bufferCoord := generics.Coordinate(buffer)
+	for x := genMap.TopLeft().X() + bufferCoord; x <= genMap.BottomRight().X()-bufferCoord; x++ {
+		for y := genMap.TopLeft().Y() + bufferCoord; y <= genMap.BottomRight().Y()-bufferCoord; y++ {
+			pos := factory.Position(genMap.Structure())(x, y, 0)
 			tile, err := genMap.GetTileAt(pos)
 			if err != nil {
 				return errors.Wrap(err, "error getting tile")
@@ -68,8 +74,7 @@ func printMap(genMap Generics.Map, buffer int, w io.Writer) error {
 	return nil
 }
 
-
-func generate(generator Generics.Generator) (Generics.Map, error) {
+func generate(generator generics.Generator) (generics.Map, error) {
 	genMap, err := generator.Generate()
 	if err != nil {
 		return nil, errors.Wrap(err, "error generating map")
