@@ -1,4 +1,4 @@
-package Generics
+package generics
 
 
 //GeneratorFactory defines a factory function for generators

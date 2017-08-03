@@ -1,17 +1,14 @@
-package Factory
+package factory
 
-import (
-"github.com/philbrookes/map-generator/pkg/Flat"
-"github.com/philbrookes/map-generator/pkg/Generics"
-)
+import "github.com/philbrookes/map-generator/pkg/generics"
+import "github.com/philbrookes/map-generator/pkg/flat"
 
 // Tile returns a TileFunc for creating new Tiles in the supplied type
-func Tile(mapType string) Generics.TileFactory {
+func Tile(mapType string) generics.TileFactory {
 	switch mapType {
 	case "flat":
-		return Flat.NewTile
+		return flat.NewTile
 	}
 
-	return Flat.NewTile
+	return flat.NewTile
 }
-

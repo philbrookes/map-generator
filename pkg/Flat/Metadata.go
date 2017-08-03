@@ -1,17 +1,17 @@
-package Flat
+package flat
 
 import (
-	"github.com/philbrookes/map-generator/pkg/Generics"
+	"github.com/philbrookes/map-generator/pkg/generics"
 )
 
 // NewMetadata creates a new metadata object
-func NewMetadata(score float32, original bool) Generics.Metadata {
+func NewMetadata(score float32, original bool) generics.Metadata {
 	return &Metadata{score: score, original: original}
 }
 
 // Metadata represent metadata of a single tile
 type Metadata struct {
-	score float32
+	score    float32
 	original bool
 }
 

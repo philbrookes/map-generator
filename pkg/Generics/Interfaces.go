@@ -1,4 +1,4 @@
-package Generics
+package generics
 
 // Generator is an interface of a map generator
 type Generator interface {

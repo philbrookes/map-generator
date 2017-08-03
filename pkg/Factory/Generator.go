@@ -1,16 +1,16 @@
-package Factory
+package factory
 
 import (
-	"github.com/philbrookes/map-generator/pkg/Flat"
-	"github.com/philbrookes/map-generator/pkg/Generics"
+	"github.com/philbrookes/map-generator/pkg/flat"
+	"github.com/philbrookes/map-generator/pkg/generics"
 )
 
 //Generator returns a function for building generators of the specified type
-func Generator(mapType string) Generics.GeneratorFactory {
+func Generator(mapType string) generics.GeneratorFactory {
 	switch mapType {
 	case "flat":
-		return Flat.NewGenerator
+		return flat.NewGenerator
 	}
 
-	return Flat.NewGenerator
+	return flat.NewGenerator
 }

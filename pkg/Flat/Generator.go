@@ -1,16 +1,17 @@
-package Flat
+package flat
 
 import (
-	"github.com/philbrookes/map-generator/pkg/Generics"
-	"math/rand"
-	"github.com/pkg/errors"
 	"fmt"
-	"strconv"
 	"math"
+	"math/rand"
+	"strconv"
+
+	"github.com/philbrookes/map-generator/pkg/generics"
+	"github.com/pkg/errors"
 )
 
 //NewGenerator creates a new flat map generator
-func NewGenerator(topLeft, bottomRight Generics.Position, positionFactory Generics.PositionFactory, tileFactory Generics.TileFactory, mapFactory Generics.MapFactory) Generics.Generator {
+func NewGenerator(topLeft, bottomRight generics.Position, positionFactory generics.PositionFactory, tileFactory generics.TileFactory, mapFactory generics.MapFactory) generics.Generator {
 	seed, _ := strconv.Atoi(fmt.Sprintf("%d%d%d%d", topLeft.X(), topLeft.Y(), bottomRight.X(), bottomRight.Y()))
 	rng := rand.New(rand.NewSource(int64(seed)))
 	return &Generator{topLeft: topLeft, bottomRight: bottomRight, positionFactory: positionFactory, tileFactory: tileFactory, mapFactory: mapFactory, rng: rng}
@@ -18,20 +19,20 @@ func NewGenerator(topLeft, bottomRight Generics.Position, positionFactory Generi
 
 // Generator generates maps
 type Generator struct {
-	topLeft Generics.Position
-	bottomRight Generics.Position
-	tileFactory Generics.TileFactory
-	positionFactory Generics.PositionFactory
-	mapFactory Generics.MapFactory
-	rng *rand.Rand
+	topLeft         generics.Position
+	bottomRight     generics.Position
+	tileFactory     generics.TileFactory
+	positionFactory generics.PositionFactory
+	mapFactory      generics.MapFactory
+	rng             *rand.Rand
 }
 
-// Generate a Flat.Map
-func (g *Generator) Generate() (Generics.Map, error) {
+// Generate a flat.Map
+func (g *Generator) Generate() (generics.Map, error) {
 	genMap := g.mapFactory(g.topLeft, g.bottomRight)
 
-	for x:=g.topLeft.X();x<=g.bottomRight.X();x++{
-		for y:=g.topLeft.Y();y<=g.bottomRight.Y();y++{
+	for x := g.topLeft.X(); x <= g.bottomRight.X(); x++ {
+		for y := g.topLeft.Y(); y <= g.bottomRight.Y(); y++ {
 			tile := g.tileFactory(g.positionFactory(x, y, 0))
 			err := genMap.AddTile(tile)
 			if err != nil {
@@ -54,22 +55,21 @@ func (g *Generator) Generate() (Generics.Map, error) {
 	return warmedMap, nil
 }
 
-
 //recursive
-func(g *Generator) warm(spotMap Generics.Map, steps int) (Generics.Map, error) {
+func (g *Generator) warm(spotMap generics.Map, steps int) (generics.Map, error) {
 	if steps <= 0 {
 		return spotMap, nil
 	}
 
 	warmedMap := g.mapFactory(g.topLeft, g.bottomRight)
-	for x:=spotMap.TopLeft().X();x<=spotMap.BottomRight().X();x++ {
+	for x := spotMap.TopLeft().X(); x <= spotMap.BottomRight().X(); x++ {
 		for y := spotMap.TopLeft().Y(); y <= spotMap.BottomRight().Y(); y++ {
 			total := float32(0)
 			tileCount := 0
-			startX := Generics.Coordinate(math.Max(float64(x-1), float64(spotMap.TopLeft().X())))
-			startY := Generics.Coordinate(math.Max(float64(y-1), float64(spotMap.TopLeft().Y())))
-			stopX := Generics.Coordinate(math.Min(float64(x+1), float64(spotMap.BottomRight().X())))
-			stopY := Generics.Coordinate(math.Min(float64(y+1), float64(spotMap.BottomRight().Y())))
+			startX := generics.Coordinate(math.Max(float64(x-1), float64(spotMap.TopLeft().X())))
+			startY := generics.Coordinate(math.Max(float64(y-1), float64(spotMap.TopLeft().Y())))
+			stopX := generics.Coordinate(math.Min(float64(x+1), float64(spotMap.BottomRight().X())))
+			stopY := generics.Coordinate(math.Min(float64(y+1), float64(spotMap.BottomRight().Y())))
 
 			tile, err := spotMap.GetTileAt(g.positionFactory(x, y, 0))
 			if err != nil {
@@ -80,8 +80,8 @@ func(g *Generator) warm(spotMap Generics.Map, steps int) (Generics.Map, error) {
 				continue
 			}
 
-			for scanX:=startX;scanX<=stopX;scanX++{
-				for scanY:=startY;scanY<=stopY;scanY++{
+			for scanX := startX; scanX <= stopX; scanX++ {
+				for scanY := startY; scanY <= stopY; scanY++ {
 					scanTile, err := spotMap.GetTileAt(g.positionFactory(scanX, scanY, 0))
 					if err != nil {
 						return nil, errors.Wrap(err, "error loading scan tile")

@@ -1,38 +1,39 @@
-package Flat
+package flat
 
 import (
-	"github.com/philbrookes/map-generator/pkg/Generics"
 	"fmt"
+
+	"github.com/philbrookes/map-generator/pkg/generics"
 )
 
 // NewPosition at supplied x, y co-ordinates
-func NewPosition(x, y, _ Generics.Coordinate) Generics.Position {
+func NewPosition(x, y, _ generics.Coordinate) generics.Position {
 	return &Position{x: x, y: y}
 }
 
 // Position represent a position on a flat plane
 type Position struct {
-	x Generics.Coordinate
-	y Generics.Coordinate
+	x generics.Coordinate
+	y generics.Coordinate
 }
 
 // X value of this position
-func (p *Position) X() Generics.Coordinate {
+func (p *Position) X() generics.Coordinate {
 	return p.x
 }
 
 // Y value of this position
-func (p *Position) Y() Generics.Coordinate {
+func (p *Position) Y() generics.Coordinate {
 	return p.y
 }
 
 // Z value of this position (ALWAYS 0)
-func (p *Position) Z() Generics.Coordinate {
+func (p *Position) Z() generics.Coordinate {
 	return 0
 }
 
 // XY values of this position
-func (p *Position) XY() (Generics.Coordinate, Generics.Coordinate) {
+func (p *Position) XY() (generics.Coordinate, generics.Coordinate) {
 	return p.x, p.y
 }
 

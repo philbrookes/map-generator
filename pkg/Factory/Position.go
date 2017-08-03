@@ -1,16 +1,16 @@
-package Factory
+package factory
 
 import (
-	"github.com/philbrookes/map-generator/pkg/Flat"
-	"github.com/philbrookes/map-generator/pkg/Generics"
+	"github.com/philbrookes/map-generator/pkg/flat"
+	"github.com/philbrookes/map-generator/pkg/generics"
 )
 
 // Position returns a PositionFunc for creating new positions in the supplied type
-func Position(mapType string) Generics.PositionFactory {
+func Position(mapType string) generics.PositionFactory {
 	switch mapType {
 	case "flat":
-		return Flat.NewPosition
+		return flat.NewPosition
 	}
 
-	return Flat.NewPosition
+	return flat.NewPosition
 }
