@@ -18,24 +18,25 @@ type Map interface {
 
 // Tile is an interface of a plot on a map
 type Tile interface {
-	Position() Position
-	Danger() Metadata
+	GetPosition() Position
+	GetDanger() Metadata
 }
 
+//Metadata is an interface defining the metadata of a tile
 type Metadata interface {
-	Score() float32
-	Original() bool
+	GetScore() float32
+	GetOriginal() bool
 	SetScore(float32)
 	SetOriginal(bool)
 }
 
 // Position is an interface to a map position
 type Position interface {
-	X() Coordinate
-	Y() Coordinate
-	Z() Coordinate
-	XY() (Coordinate, Coordinate)
-	Hash() string
+	GetX() Coordinate
+	GetY() Coordinate
+	GetZ() Coordinate
+	GetXY() (Coordinate, Coordinate)
+	GetHash() string
 }
 
 // Coordinate represents a value on a dimension

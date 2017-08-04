@@ -7,18 +7,18 @@ import (
 // NewTile at supplied position
 func NewTile(position generics.Position) generics.Tile {
 	metadata := NewMetadata(0, false)
-	return &Tile{position: position, danger: metadata}
+	return &Tile{Position: position, Danger: metadata}
 }
 
 type Tile struct {
-	position generics.Position
-	danger   generics.Metadata
+	Position generics.Position `json:"position"`
+	Danger   generics.Metadata `json:"danger"`
 }
 
-func (t *Tile) Position() generics.Position {
-	return t.position
+func (t *Tile) GetPosition() generics.Position {
+	return t.Position
 }
 
-func (t *Tile) Danger() generics.Metadata {
-	return t.danger
+func (t *Tile) GetDanger() generics.Metadata {
+	return t.Danger
 }

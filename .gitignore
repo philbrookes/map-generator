@@ -1,2 +1,3 @@
 .idea
 cmd/generator/generator
+cmd/rest-api/rest-api

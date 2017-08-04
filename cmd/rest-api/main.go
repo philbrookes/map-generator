@@ -16,7 +16,7 @@ func main() {
 	originsOk := handlers.AllowedOrigins(config.GetConfig().GetAllowedOrigins())
 	methodsOk := handlers.AllowedMethods(config.GetConfig().GetAllowedMethods())
 
-	controller.ConfigureMap(router.PathPrefix("/api/map/").Subrouter())
+	controller.ConfigureMap(router.PathPrefix("/api/map/").Subrouter(), config.GetConfig())
 
 	http.Handle("/", router)
 

@@ -12,7 +12,7 @@ import (
 
 //NewGenerator creates a new flat map generator
 func NewGenerator(topLeft, bottomRight generics.Position, positionFactory generics.PositionFactory, tileFactory generics.TileFactory, mapFactory generics.MapFactory) generics.Generator {
-	seed, _ := strconv.Atoi(fmt.Sprintf("%d%d%d%d", topLeft.X(), topLeft.Y(), bottomRight.X(), bottomRight.Y()))
+	seed, _ := strconv.Atoi(fmt.Sprintf("%d%d%d%d", topLeft.GetX(), topLeft.GetY(), bottomRight.GetX(), bottomRight.GetY()))
 	rng := rand.New(rand.NewSource(int64(seed)))
 	return &Generator{topLeft: topLeft, bottomRight: bottomRight, positionFactory: positionFactory, tileFactory: tileFactory, mapFactory: mapFactory, rng: rng}
 }
@@ -31,19 +31,19 @@ type Generator struct {
 func (g *Generator) Generate() (generics.Map, error) {
 	genMap := g.mapFactory(g.topLeft, g.bottomRight)
 
-	for x := g.topLeft.X(); x <= g.bottomRight.X(); x++ {
-		for y := g.topLeft.Y(); y <= g.bottomRight.Y(); y++ {
+	for x := g.topLeft.GetX(); x <= g.bottomRight.GetX(); x++ {
+		for y := g.topLeft.GetY(); y <= g.bottomRight.GetY(); y++ {
 			tile := g.tileFactory(g.positionFactory(x, y, 0))
 			err := genMap.AddTile(tile)
 			if err != nil {
 				return nil, errors.Wrap(err, "Problem adding tile to map")
 			}
-			hash, _ := strconv.Atoi(tile.Position().Hash())
+			hash, _ := strconv.Atoi(tile.GetPosition().GetHash())
 			g.rng.Seed(int64(hash))
 			content := g.rng.Int() % 40
 			if content == 0 {
-				tile.Danger().SetOriginal(true)
-				tile.Danger().SetScore(100)
+				tile.GetDanger().SetOriginal(true)
+				tile.GetDanger().SetScore(100)
 			}
 		}
 	}
@@ -62,20 +62,20 @@ func (g *Generator) warm(spotMap generics.Map, steps int) (generics.Map, error) 
 	}
 
 	warmedMap := g.mapFactory(g.topLeft, g.bottomRight)
-	for x := spotMap.TopLeft().X(); x <= spotMap.BottomRight().X(); x++ {
-		for y := spotMap.TopLeft().Y(); y <= spotMap.BottomRight().Y(); y++ {
+	for x := spotMap.TopLeft().GetX(); x <= spotMap.BottomRight().GetX(); x++ {
+		for y := spotMap.TopLeft().GetY(); y <= spotMap.BottomRight().GetY(); y++ {
 			total := float32(0)
 			tileCount := 0
-			startX := generics.Coordinate(math.Max(float64(x-1), float64(spotMap.TopLeft().X())))
-			startY := generics.Coordinate(math.Max(float64(y-1), float64(spotMap.TopLeft().Y())))
-			stopX := generics.Coordinate(math.Min(float64(x+1), float64(spotMap.BottomRight().X())))
-			stopY := generics.Coordinate(math.Min(float64(y+1), float64(spotMap.BottomRight().Y())))
+			startX := generics.Coordinate(math.Max(float64(x-1), float64(spotMap.TopLeft().GetX())))
+			startY := generics.Coordinate(math.Max(float64(y-1), float64(spotMap.TopLeft().GetY())))
+			stopX := generics.Coordinate(math.Min(float64(x+1), float64(spotMap.BottomRight().GetX())))
+			stopY := generics.Coordinate(math.Min(float64(y+1), float64(spotMap.BottomRight().GetY())))
 
 			tile, err := spotMap.GetTileAt(g.positionFactory(x, y, 0))
 			if err != nil {
 				return nil, errors.Wrap(err, "Could not load tile")
 			}
-			if tile.Danger().Original() {
+			if tile.GetDanger().GetOriginal() {
 				warmedMap.AddTile(tile)
 				continue
 			}
@@ -86,11 +86,11 @@ func (g *Generator) warm(spotMap generics.Map, steps int) (generics.Map, error) 
 					if err != nil {
 						return nil, errors.Wrap(err, "error loading scan tile")
 					}
-					total += scanTile.Danger().Score()
+					total += scanTile.GetDanger().GetScore()
 					tileCount++
 				}
 			}
-			tile.Danger().SetScore(total / float32(tileCount))
+			tile.GetDanger().SetScore(total / float32(tileCount))
 			err = warmedMap.AddTile(tile)
 			if err != nil {
 				return nil, errors.Wrap(err, "Problem adding tile to warmed map")

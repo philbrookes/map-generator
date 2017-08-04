@@ -8,35 +8,36 @@ import (
 
 // NewPosition at supplied x, y co-ordinates
 func NewPosition(x, y, _ generics.Coordinate) generics.Position {
-	return &Position{x: x, y: y}
+	return &Position{X: x, Y: y}
 }
 
 // Position represent a position on a flat plane
 type Position struct {
-	x generics.Coordinate
-	y generics.Coordinate
+	X generics.Coordinate `json:"x"`
+	Y generics.Coordinate `json:"y"`
 }
 
-// X value of this position
-func (p *Position) X() generics.Coordinate {
-	return p.x
+// GetX value of this position
+func (p *Position) GetX() generics.Coordinate {
+	return p.X
 }
 
-// Y value of this position
-func (p *Position) Y() generics.Coordinate {
-	return p.y
+// GetY value of this position
+func (p *Position) GetY() generics.Coordinate {
+	return p.Y
 }
 
-// Z value of this position (ALWAYS 0)
-func (p *Position) Z() generics.Coordinate {
+// GetZ value of this position (ALWAYS 0)
+func (p *Position) GetZ() generics.Coordinate {
 	return 0
 }
 
-// XY values of this position
-func (p *Position) XY() (generics.Coordinate, generics.Coordinate) {
-	return p.x, p.y
+// GetXY values of this position
+func (p *Position) GetXY() (generics.Coordinate, generics.Coordinate) {
+	return p.X, p.Y
 }
 
-func (p *Position) Hash() string {
-	return fmt.Sprintf("%d0%d", p.x, p.y)
+//GetHash returns hash of this position
+func (p *Position) GetHash() string {
+	return fmt.Sprintf("%d0%d", p.X, p.Y)
 }

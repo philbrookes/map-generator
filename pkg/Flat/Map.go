@@ -11,13 +11,13 @@ import (
 type Map struct {
 	topLeft     generics.Position
 	bottomRight generics.Position
-	tiles       map[string]generics.Tile
+	Tiles       map[string]generics.Tile `json:"tiles"`
 	structure   string
 }
 
 //NewMap creates a new flat map
 func NewMap(topLeft, bottomRight generics.Position) generics.Map {
-	return &Map{topLeft: topLeft, bottomRight: bottomRight, tiles: map[string]generics.Tile{}, structure: "flat"}
+	return &Map{topLeft: topLeft, bottomRight: bottomRight, Tiles: map[string]generics.Tile{}, structure: "flat"}
 }
 
 // TopLeft returns the top-left position of this flat map
@@ -31,11 +31,11 @@ func (m *Map) BottomRight() generics.Position {
 }
 
 func (m *Map) GetTileAt(position generics.Position) (generics.Tile, error) {
-	if tile, ok := m.tiles[position.Hash()]; ok {
+	if tile, ok := m.Tiles[position.GetHash()]; ok {
 		return tile, nil
 	}
 
-	return nil, errors.New(fmt.Sprintf("Could not find tile for position: (%d, %d)\n", position.X(), position.Y()))
+	return nil, errors.New(fmt.Sprintf("Could not find tile for position: (%d, %d)\n", position.GetX(), position.GetY()))
 }
 
 func (m *Map) IsPositionFilled(position generics.Position) bool {
@@ -46,17 +46,17 @@ func (m *Map) IsPositionFilled(position generics.Position) bool {
 }
 
 func (m *Map) AddTile(tile generics.Tile) error {
-	if m.IsPositionFilled(tile.Position()) {
-		return errors.New(fmt.Sprintf("Tile already placed at: (%d, %d), use UpdateTile instead\n", tile.Position().X(), tile.Position().Y()))
+	if m.IsPositionFilled(tile.GetPosition()) {
+		return errors.New(fmt.Sprintf("Tile already placed at: (%d, %d), use UpdateTile instead\n", tile.GetPosition().GetX(), tile.GetPosition().GetY()))
 	}
 
-	m.tiles[tile.Position().Hash()] = tile
+	m.Tiles[tile.GetPosition().GetHash()] = tile
 
 	return nil
 }
 
 func (m *Map) UpdateTile(tile generics.Tile) {
-	m.tiles[tile.Position().Hash()] = tile
+	m.Tiles[tile.GetPosition().GetHash()] = tile
 }
 
 func (m *Map) Structure() string {

@@ -6,6 +6,7 @@ import (
 	"os"
 	"strconv"
 
+	"github.com/philbrookes/map-generator/pkg/config"
 	"github.com/philbrookes/map-generator/pkg/factory"
 	"github.com/philbrookes/map-generator/pkg/generics"
 	"github.com/pkg/errors"
@@ -32,8 +33,8 @@ func main() {
 		panic(errors.Wrap(err, "y must be numeric"))
 	}
 
-	buffer := 15
-	viewport := 25
+	buffer := config.GetConfig().GetBufferSize()
+	viewport := config.GetConfig().GetViewportSize()
 	mapsize := buffer + viewport
 
 	topLeft := positionFactory(generics.Coordinate(midX-(mapsize)), generics.Coordinate(midY-(mapsize)), 0)
@@ -55,15 +56,15 @@ func main() {
 
 func printMap(genMap generics.Map, buffer int, w io.Writer) error {
 	bufferCoord := generics.Coordinate(buffer)
-	for x := genMap.TopLeft().X() + bufferCoord; x <= genMap.BottomRight().X()-bufferCoord; x++ {
-		for y := genMap.TopLeft().Y() + bufferCoord; y <= genMap.BottomRight().Y()-bufferCoord; y++ {
+	for x := genMap.TopLeft().GetX() + bufferCoord; x <= genMap.BottomRight().GetX()-bufferCoord; x++ {
+		for y := genMap.TopLeft().GetY() + bufferCoord; y <= genMap.BottomRight().GetY()-bufferCoord; y++ {
 			pos := factory.Position(genMap.Structure())(x, y, 0)
 			tile, err := genMap.GetTileAt(pos)
 			if err != nil {
 				return errors.Wrap(err, "error getting tile")
 			}
 			switch {
-			case tile.Danger().Score() < 25:
+			case tile.GetDanger().GetScore() < 25:
 				fmt.Fprint(w, "[#]")
 			default:
 				fmt.Fprint(w, "[ ]")

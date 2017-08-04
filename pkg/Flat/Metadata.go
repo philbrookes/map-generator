@@ -6,27 +6,31 @@ import (
 
 // NewMetadata creates a new metadata object
 func NewMetadata(score float32, original bool) generics.Metadata {
-	return &Metadata{score: score, original: original}
+	return &Metadata{Score: score, Original: original}
 }
 
 // Metadata represent metadata of a single tile
 type Metadata struct {
-	score    float32
-	original bool
+	Score    float32 `json:"score"`
+	Original bool    `json:"original"`
 }
 
-func (m *Metadata) Score() float32 {
-	return m.score
+//GetScore returns the score of this tile
+func (m *Metadata) GetScore() float32 {
+	return m.Score
 }
 
-func (m *Metadata) Original() bool {
-	return m.original
+//GetOriginal returns whether this was an originating tile or not
+func (m *Metadata) GetOriginal() bool {
+	return m.Original
 }
 
+//SetScore changes the current score of this tile
 func (m *Metadata) SetScore(s float32) {
-	m.score = s
+	m.Score = s
 }
 
+//SetOriginal changes whether this is an originating tile or not
 func (m *Metadata) SetOriginal(b bool) {
-	m.original = b
+	m.Original = b
 }
