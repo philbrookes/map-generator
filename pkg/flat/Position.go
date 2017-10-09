@@ -40,4 +40,5 @@ func (p *Position) GetXY() (generics.Coordinate, generics.Coordinate) {
 //GetHash returns hash of this position
 func (p *Position) GetHash() string {
 	return fmt.Sprintf("%d0%d", p.X, p.Y)
+
 }

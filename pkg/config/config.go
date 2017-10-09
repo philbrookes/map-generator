@@ -14,7 +14,7 @@ type Config struct {
 // GetConfig returns an instance of a config
 func GetConfig() *Config {
 	config := Config{
-		allowedOrigins: []string{"localhost", "127.0.0.1"},
+		allowedOrigins: []string{"localhost", "127.0.0.1", "http://127.0.0.1:3000"},
 		allowedMethods: []string{"GET", "PUT", "POST", "DELETE"},
 		port:           8080,
 		buffer:         15,
